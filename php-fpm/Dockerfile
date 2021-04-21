@@ -1,5 +1,5 @@
-FROM php:5.6.34-fpm
-#FROM php:5.6.31-fpm-alpine
+FROM php:5.6.40-fpm
+#FROM php:5.6.34-fpm
 
 #install mcrypt、mysql Module
 RUN apt-get update && apt-get install -y \
