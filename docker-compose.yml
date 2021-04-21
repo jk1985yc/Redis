@@ -1,0 +1,63 @@
+
+version: '2'
+services:
+
+  nginx:
+    build: ./nginx/
+    image: nginx-img:0.0.1
+    container_name: nginx
+    hostname: nginx
+    network_mode: "host"
+    # networks:
+    #     - vlan
+    depends_on:
+        - php.fpm
+    volumes:
+        - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+        - ./nginx/conf/conf.d:/etc/nginx/conf.d
+        - ./nginx/conf/fastcgi.conf:/etc/nginx/fastcgi.conf
+        - ./www:/www
+        - ./logs:/var/log/nginx
+        - "phpsocket:/var/run"
+    restart: always
+    ports:
+        - 16379:16379
+
+  php.fpm:
+    build: ./php-fpm/
+    image: php.fpm-img:0.0.1
+    container_name: php.fpm
+    hostname: nginx
+    network_mode: "host"
+    # networks:
+    #     - vlan
+    # extra_hosts:
+    #     - redis:127.0.0.1
+    volumes:
+        - ./php-fpm/conf:/usr/local/etc/php-fpm.d
+        - ./php-fpm/php/php.ini:/usr/local/etc/php/conf.d/php.ini
+        - ./www:/www
+        - "phpsocket:/var/run"
+    restart: always
+    # ports:
+    #     - 9000:9000
+
+  redis:
+    build: ./redis/
+    image: redis-img:0.0.1
+    container_name: redis
+    hostname: nginx
+    network_mode: "host"
+    # networks:
+    #     - vlan
+    volumes:
+        - ./redis/data:/data
+        - ./redis/conf/redis.conf:/usr/local/etc/redis/redis.conf
+    restart: always
+    ports:
+        - 6379:6379
+
+# networks:
+#   vlan:
+volumes:
+    phpsocket:      
