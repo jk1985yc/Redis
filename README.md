@@ -1,0 +1,2 @@
+# Redis
+Add Nginx phpRedisAdmin
